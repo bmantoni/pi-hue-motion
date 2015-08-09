@@ -11,7 +11,7 @@ pir_pin = 18
 
 lights_off_delay = 2 
 lights_on = False
-activate_delay = 0.5
+activate_delay = 0.2
 
 bridge_ip = "192.168.1.8"
 hue_user = "2f59282530c009273ae837f135627c53"
