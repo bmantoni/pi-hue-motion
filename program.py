@@ -5,11 +5,11 @@ import json
 import RPi.GPIO as io
 
 io.setmode(io.BCM)
-
+ 
 # Constants
 pir_pin = 18
 
-lights_off_delay = 10
+lights_off_delay = 10 
 lights_on = False
 activate_delay = 0.5
 
