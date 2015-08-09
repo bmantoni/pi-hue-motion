@@ -9,7 +9,7 @@ io.setmode(io.BCM)
 # Constants
 pir_pin = 18
 
-lights_off_delay = 10 
+lights_off_delay = 2 
 lights_on = False
 activate_delay = 0.5
 
@@ -30,10 +30,12 @@ t0 = time.time() - lights_off_delay - 1
 # procedures
 def turnLightsOn():
     print "Turning lights on!"
+    toggleLightOnOff(2, True)
     return True
 
 def turnLightsOff():
     print "Turning lights off!"
+    toggleLightOnOff(2, False)
     return False
 
 def getLightStatus():
@@ -42,14 +44,14 @@ def getLightStatus():
     print response
     print response.text
 
-def turnLightOn(id, h, s, b):
+def setLightColor(id, h, s, b):
     print "TODO"
 
-def turnLightOff(id):
+def toggleLightOnOff(id, on_off):
     url = hue_url_pattern.format(bridge_ip, hue_user, "lights/")
     url += "{0}/state".format(id)
     print url
-    j = { 'on': False }
+    j = { 'on': on_off }
     response = requests.put(url, data=json.dumps(j))
     print response
     print response.text
@@ -57,7 +59,6 @@ def turnLightOff(id):
 # main
 
 getLightStatus()
-turnLightOff(2)
 
 while True:
     if io.input(pir_pin):
