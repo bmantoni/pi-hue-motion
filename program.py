@@ -43,7 +43,8 @@ def turnLightsOn():
 
 def turnLightsOff():
     print "Turning lights off!"
-    toggleLightOnOff(2, False)
+    #toggleLightOnOff(2, False)
+    toggleGroupOnOff(group, False)
     return False
 
 def getLightStatus():
@@ -80,6 +81,14 @@ def startScene(group, scene):
     print response
     print response.text
 
+def toggleGroupOnOff(group, on_off):
+    url = hue_url_pattern.format(bridge_ip, hue_user,
+        hue_url_set_group_state.format(group))
+    print url
+    j = { 'on': on_off }
+    response = requests.put(url, data=json.dumps(j))
+    print response
+    print response.text
 
 # main
 
