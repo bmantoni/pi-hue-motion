@@ -8,7 +8,10 @@ import RPi.GPIO as io
 
 io.setmode(io.BCM)
 
-logging.basicConfig(filename='/home/pi/pi-hue-motion/hue-motion.log', level=logging.INFO)
+logging.basicConfig(
+  filename='/home/pi/pi-hue-motion/hue-motion.log', 
+  format='%(asctime)s %(message)s',
+  level=logging.INFO)
 
 # Constants
 pir_pin = 18
@@ -41,9 +44,19 @@ io.setup(pir_pin, io.IN)
 # initialize
 t0 = time.time() - lights_off_delay - 1
 
+# utility methods
+def logResponse(r):
+    logging.debug(r)
+    logging.debug(r.text)
+
+
 # for now just random, later do something fancier
 def getSceneToUse():
-   return random.choice(scenes.values())
+    return random.choice(scenes.values())
+
+# url formatting
+def getLightsUrl():
+    return hue_url_pattern.format(bridge_ip, hue_user, hue_url_lights)
 
 # procedures
 def turnLightsOn():
@@ -62,46 +75,36 @@ def turnLightsOff():
     return False
 
 def getLightStatus():
-    url = hue_url_pattern.format(bridge_ip, hue_user, "lights/")
-    response = requests.get(url)
-    logging.debug(response)
-    logging.debug(response.text)
+    logResponse( requests.get(getLightsUrl()) )
 
 def setLightColor(id, h, s, b):
-    url = hue_url_pattern.format(bridge_ip, hue_user, "lights/")
+    getLightsUrl()
     url += "{0}/state".format(id)
     j = { 'on': True, 'sat':s, 'bri':b, 'hue':h }
-    response = requests.put(url, data=json.dumps(j))
-    logging.debug(response)
-    logging.debug(response.text)
-
+    doPutRequest(url, j)
 
 def toggleLightOnOff(id, on_off):
-    url = hue_url_pattern.format(bridge_ip, hue_user, hue_url_lights)
-    url += "{0}/state".format(id)
-    print url
+    url = getLightsUrl() + "{0}/state".format(id)
     j = { 'on': on_off }
-    response = requests.put(url, data=json.dumps(j))
-    logging.debug(response)
-    logging.debug(response.text)
+    doPutRequest(url, j)
 
 def startScene(group, scene):
     url = hue_url_pattern.format(bridge_ip, hue_user, 
         hue_url_set_group_state.format(group))
     logging.debug("Start scene url: " + url)
     j = { 'on': True, 'scene': scene }
-    response = requests.put(url, data=json.dumps(j))
-    logging.debug(response)
-    logging.debug(response.text)
+    doPutRequest(url, j)
 
 def toggleGroupOnOff(group, on_off):
     url = hue_url_pattern.format(bridge_ip, hue_user,
         hue_url_set_group_state.format(group))
-    print url
     j = { 'on': on_off }
-    response = requests.put(url, data=json.dumps(j))
-    logging.debug(response)
-    logging.debug(response.text)
+    doPutRequest(url, j)
+
+def doPutRequest(url, body):
+    response = requests.put(url, data=json.dumps(body))
+    logResponse(response)
+
 
 # main
 
@@ -115,7 +118,6 @@ while True:
     if io.input(pir_pin):
         #reset the timer
         t0 = time.time()
-        #print("PIR ALARM!")
 
     if ( ( time.time() - t0 > lights_off_delay ) and lights_on):
         lights_on = turnLightsOff()
