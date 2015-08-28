@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 # if not working on a pi set to F, for dev/test
-on_pi = False
+on_pi = True
+pir_pin = 18
 
 import time
 import logging
@@ -15,6 +16,7 @@ logging.basicConfig(
   filename='hue-motion.log', 
   format='%(asctime)s %(message)s',
   level=logging.INFO)
+
 
 # Constants
 pir_pin = 18
