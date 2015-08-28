@@ -1,15 +1,18 @@
 #!/usr/bin/env python
-import time
-import random
-import requests
-import json
-import logging
-import RPi.GPIO as io
 
-io.setmode(io.BCM)
+# if not working on a pi set to F, for dev/test
+on_pi = False
+
+import time
+import logging
+import hue_control
+if on_pi:
+	import RPi.GPIO as io
+	io.setmode(io.BCM)
+	io.setup(pir_pin, io.IN)
 
 logging.basicConfig(
-  filename='/home/pi/pi-hue-motion/hue-motion.log', 
+  filename='hue-motion.log', 
   format='%(asctime)s %(message)s',
   level=logging.INFO)
 
@@ -20,102 +23,38 @@ lights_off_delay = 90
 lights_on = False
 activate_delay = 0.2
 
-bridge_ip = "192.168.1.8"
-hue_user = "2f59282530c009273ae837f135627c53"
+hue = hue_control.HueControl(
+	bridge_ip="192.168.1.8", 
+	user="2f59282530c009273ae837f135627c53")
 
 group = "nursery"
-scenes = {
- 'deep_sea': "726af216a-on-0",
- 'blue_rain': "0f2c67d80-on-0",
- 'sunset': "087f88f52-on-0",
- 'reading': "e915785b2-on-0" }
 
-# URL Patterns
-
-hue_url_pattern = "http://{0}/api/{1}/{2}"
-
-hue_url_lights = "lights/"
-hue_url_groups = "groups/"
-hue_url_set_group_state = hue_url_groups + "{0}/action"
-
-# configure input
-io.setup(pir_pin, io.IN)
-
-# initialize
-t0 = time.time() - lights_off_delay - 1
-
-# utility methods
-def logResponse(r):
-    logging.debug(r)
-    logging.debug(r.text)
-
-
-# for now just random, later do something fancier
-def getSceneToUse():
-    return random.choice(scenes.values())
-
-# url formatting
-def getLightsUrl():
-    return hue_url_pattern.format(bridge_ip, hue_user, hue_url_lights)
-
-# procedures
 def turnLightsOn():
     logging.info("Turning lights on!")
     #toggleLightOnOff(2, True)
     #setLightColor(2, 10000, 255, 255)
     #startScene(group, scene_deep_sea)
-    startScene(group, getSceneToUse())
+    hue.startScene(group)
     
     return True
 
 def turnLightsOff():
     logging.info("Turning lights off!")
     #toggleLightOnOff(2, False)
-    toggleGroupOnOff(group, False)
+    hue.toggleGroupOnOff(group, False)
     return False
 
-def getLightStatus():
-    logResponse( requests.get(getLightsUrl()) )
+# MAIN
 
-def setLightColor(id, h, s, b):
-    getLightsUrl()
-    url += "{0}/state".format(id)
-    j = { 'on': True, 'sat':s, 'bri':b, 'hue':h }
-    doPutRequest(url, j)
-
-def toggleLightOnOff(id, on_off):
-    url = getLightsUrl() + "{0}/state".format(id)
-    j = { 'on': on_off }
-    doPutRequest(url, j)
-
-def startScene(group, scene):
-    url = hue_url_pattern.format(bridge_ip, hue_user, 
-        hue_url_set_group_state.format(group))
-    logging.debug("Start scene url: " + url)
-    j = { 'on': True, 'scene': scene }
-    doPutRequest(url, j)
-
-def toggleGroupOnOff(group, on_off):
-    url = hue_url_pattern.format(bridge_ip, hue_user,
-        hue_url_set_group_state.format(group))
-    j = { 'on': on_off }
-    doPutRequest(url, j)
-
-def doPutRequest(url, body):
-    response = requests.put(url, data=json.dumps(body))
-    logResponse(response)
-
-
-# main
-
+t0 = time.time() - lights_off_delay - 1
 logging.info(" --- Startup ---")
-getLightStatus()
+hue.getLightStatus()
 # on startup they'll turn on here then immediately turn off (below)
 # just to show the program has started
 lights_on = turnLightsOn()
 
 while True:
-    if io.input(pir_pin):
+    if on_pi and io.input(pir_pin):
         #reset the timer
         t0 = time.time()
 
