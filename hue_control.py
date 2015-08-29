@@ -29,8 +29,8 @@ class Effects(object):
 			lambda g, self: self.startScene(g, Effects.scenes['blue_rain']) ),
 		'morning': LightAction(
 			lambda p: p >= 6 and p < 10,
-			lambda g, self: self.startScene(g, Effects.cenes['sunset']) ),
-		'isDay': LightAction(
+			lambda g, self: self.startScene(g, Effects.scenes['sunset']) ),
+		'daytime': LightAction(
 			lambda p: p >= 10 and p < 18,
 			lambda g, self: self.startColorLoop(g))
 		}
@@ -46,8 +46,7 @@ class HueControl(object):
 	def __init__(self, bridge_ip, user):
 		self.bridge_ip = bridge_ip
 		self.user = user
-		
-	# for now just random, later do something fancier
+
 	def doTimeBasedAction(self, group):
 		r = [name for name in Effects.actions if Effects.actions[name].when( time.localtime().tm_hour )]
 		a = None
