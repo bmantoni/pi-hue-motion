@@ -13,7 +13,7 @@ if on_pi:
 	io.setup(pir_pin, io.IN)
 
 logging.basicConfig(
-  filename='hue-motion.log', 
+  filename='hue-motion.log', # /home/pi/pi-hue-motion/hue-motion.log
   format='%(asctime)s %(message)s',
   level=logging.INFO)
 
