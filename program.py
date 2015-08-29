@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # if not working on a pi set to F, for dev/test
-on_pi = True
+on_pi = False
 pir_pin = 18
 
 import time
@@ -33,10 +33,8 @@ group = "nursery"
 
 def turnLightsOn():
     logging.info("Turning lights on!")
-    #toggleLightOnOff(2, True)
     #setLightColor(2, 10000, 255, 255)
-    #startScene(group, scene_deep_sea)
-    hue.startScene(group)
+    hue.doGroupAction(group)
     
     return True
 
