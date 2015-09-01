@@ -26,10 +26,10 @@ class Effects(object):
 			lambda g, self: self.startScene(g, Effects.scenes['deep_sea']) ),
 		'middleOfTheNight': LightAction(
 			lambda p: p >= 22 or p < 6,
-			lambda g, self: self.startScene(g, Effects.scenes['blue_rain']) ),
+			lambda g, self: self.startScene(g, Effects.scenes['sunset']) ),
 		'morning': LightAction(
 			lambda p: p >= 6 and p < 10,
-			lambda g, self: self.startScene(g, Effects.scenes['sunset']) ),
+			lambda g, self: self.startScene(g, Effects.scenes['blue_rain']) ),
 		'daytime': LightAction(
 			lambda p: p >= 10 and p < 18,
 			lambda g, self: self.startColorLoop(g))
