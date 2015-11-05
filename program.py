@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # if not working on a pi set to F, for dev/test
-on_pi = False
+on_pi = True
 pir_pin = 18
 
 import time
@@ -27,13 +27,13 @@ activate_delay = 0.2
 
 hue = hue_control.HueControl(
 	bridge_ip="192.168.1.8", 
-	user="2f59282530c009273ae837f135627c53")
+	user="34f30a5a1bdaa117196a4dc63f76c33")
 
+# Assumes this has been created manually. With API.
 group = "nursery"
 
 def turnLightsOn():
     logging.info("Turning lights on!")
-    #setLightColor(2, 10000, 255, 255)
     hue.doGroupAction(group)
     
     return True
@@ -52,9 +52,17 @@ hue.getLightStatus()
 # on startup they'll turn on here then immediately turn off (below)
 # just to show the program has started
 lights_on = turnLightsOn()
+time.sleep(0.5)
+
+if not on_pi:
+	# for testing
+	hue.setLightColor(1, 962, 252, 151)
+	time.sleep(1.0)
+	hue.toggleGroupOnOff(group, False)
+	exit(0)
 
 while True:
-    if on_pi and io.input(pir_pin):
+    if io.input(pir_pin):
         #reset the timer
         t0 = time.time()
 

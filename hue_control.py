@@ -12,27 +12,24 @@ class LightAction(object):
 
 class Effects(object):
 
-	# right now I'm assuming these already exist.
-	# TODO - create them
+	# Assuming these exist. Created manually with Hue app.
 	scenes = {
-		'deep_sea': "726af216a-on-0",
-		'blue_rain': "0f2c67d80-on-0",
-		'sunset': "087f88f52-on-0",
-		'reading': "e915785b2-on-0" }
+		'deep_sea': "a91b0640b-on-0",
+		'blue_rain': "4f3190be7-on-0" }
 
 	actions = {
-		'evening': LightAction(
+		'bedtime': LightAction(
 			lambda p: p >= 18 and p < 22,
-			lambda g, self: self.startScene(g, Effects.scenes['deep_sea']) ),
+			lambda g, self: self.setLightColor(1, 962, 252, 151) ),
 		'middleOfTheNight': LightAction(
 			lambda p: p >= 22 or p < 6,
-			lambda g, self: self.startScene(g, Effects.scenes['sunset']) ),
+			lambda g, self: self.startScene(g, Effects.scenes['deep_sea']) ),
 		'morning': LightAction(
 			lambda p: p >= 6 and p < 10,
 			lambda g, self: self.startScene(g, Effects.scenes['blue_rain']) ),
 		'daytime': LightAction(
 			lambda p: p >= 10 and p < 18,
-			lambda g, self: self.startColorLoop(g))
+			lambda g, self: self.startColorLoop(g) )
 		}
 	
 class HueControl(object):
@@ -70,7 +67,7 @@ class HueControl(object):
 	def setLightColor(self, id, h, s, b):
 		url = self.getLightsUrl()
 		url += "{0}/state".format(id)
-		j = { 'on': True, 'sat':s, 'bri':b, 'hue':h }
+		j = { 'on': True, 'sat':s, 'bri':b, 'hue':h, "colormode": "hs" }
 		self.doPutRequest(url, j)
 
 	def toggleLightOnOff(self, id, on_off):
@@ -100,6 +97,10 @@ class HueControl(object):
 			self.hue_url_set_group_state.format(group))
 		j = { 'on': on_off }
 		self.doPutRequest(url, j)
+		
+	# def createGroup(self, lights, name):
+		# TODO
+		# {"lights": ["1", "2", "3"], "name": "nursery"}
 
 	def doPutRequest(self, url, body):
 		response = requests.put(url, data=json.dumps(body))
