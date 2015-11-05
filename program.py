@@ -52,7 +52,7 @@ hue.getLightStatus()
 # on startup they'll turn on here then immediately turn off (below)
 # just to show the program has started
 lights_on = turnLightsOn()
-time.sleep(0.5)
+time.sleep(0.1)
 
 if not on_pi:
 	# for testing
