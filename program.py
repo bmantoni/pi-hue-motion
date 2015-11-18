@@ -8,9 +8,9 @@ import time
 import logging
 import hue_control
 if on_pi:
-	import RPi.GPIO as io
-	io.setmode(io.BCM)
-	io.setup(pir_pin, io.IN)
+    import RPi.GPIO as io
+    io.setmode(io.BCM)
+    io.setup(pir_pin, io.IN)
 
 logging.basicConfig(
   filename='/var/log/hue-motion.log', # /home/pi/pi-hue-motion/hue-motion.log
@@ -19,15 +19,13 @@ logging.basicConfig(
 
 
 # Constants
-pir_pin = 18
-
 lights_off_delay = 90
 lights_on = False
 activate_delay = 0.2
 
 hue = hue_control.HueControl(
-	bridge_ip="192.168.1.8", 
-	user="34f30a5a1bdaa117196a4dc63f76c33")
+    bridge_ip="192.168.1.8", 
+    user="34f30a5a1bdaa117196a4dc63f76c33")
 
 # Assumes this has been created manually. With API.
 group = "nursery"
@@ -55,15 +53,16 @@ lights_on = turnLightsOn()
 time.sleep(0.1)
 
 if not on_pi:
-	# for testing
-	hue.setLightColor(1, 962, 252, 151)
-	time.sleep(1.0)
-	hue.toggleGroupOnOff(group, False)
-	exit(0)
+    # for testing
+    hue.setOneLightInGroup("nursery", 1, 962, 252, 151)
+    time.sleep(1.0)
+    hue.toggleGroupOnOff(group, False)
+    exit(0)
 
 while True:
     if io.input(pir_pin):
         #reset the timer
+        logging.debug("Motion detected.")
         t0 = time.time()
 
     if ( ( time.time() - t0 > lights_off_delay ) and lights_on):
