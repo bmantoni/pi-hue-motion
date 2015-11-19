@@ -11,3 +11,4 @@ https://www.adafruit.com/products/189
 Setup the script as a Linux daemon service, using technique here:
 http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/
 
+# Now with auto-deploy using a webhook!
