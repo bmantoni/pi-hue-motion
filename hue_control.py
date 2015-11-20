@@ -79,7 +79,7 @@ class HueControl(object):
             logging.debug("turning off light " + l)
             self.toggleLightOnOff(l, False)
             
-        logging.debug("turning on light " + id)
+        logging.debug("turning on light " + str(id))
         self.setLightColor(id, h, s, b)
         
     def setLightColor(self, id, h, s, b):
