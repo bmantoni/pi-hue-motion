@@ -76,7 +76,7 @@ class HueControl(object):
         print groupAttrs.text
         print groupAttrs.json["lights"]
         
-        for l in filter(lambda p: p != str(id), groupAttrs.json()["lights"]):
+        for l in filter(lambda p: p != str(id), groupAttrs.json["lights"]):
             logging.debug("turning off light " + l)
             self.toggleLightOnOff(l, False)
             
