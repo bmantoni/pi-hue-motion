@@ -6,6 +6,7 @@ pir_pin = 18
 
 import time
 import logging
+import atexit
 import hue_control
 if on_pi:
     import RPi.GPIO as io
@@ -42,10 +43,13 @@ def turnLightsOff():
     hue.toggleGroupOnOff(group, False)
     return False
 
+def logexit():
+    logging.info(" --------- EXIT ---------")
+    
 # MAIN
 
 t0 = time.time() - lights_off_delay - 1
-logging.info(" --- Startup ---")
+logging.info(" --------- Startup ---------")
 hue.getLightStatus()
 # on startup they'll turn on here then immediately turn off (below)
 # just to show the program has started

@@ -73,7 +73,9 @@ class HueControl(object):
             self.hue_url_get_group.format(group))
         
         groupAttrs = requests.get(url)
-        #print groupAttrs.text
+        print groupAttrs.text
+        print groupAttrs.json()["lights"]
+        print groupAttrs.json()["lights"]
         
         for l in filter(lambda p: p != str(id), groupAttrs.json()["lights"]):
             logging.debug("turning off light " + l)
