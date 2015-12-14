@@ -47,7 +47,7 @@ def logexit():
     logging.info(" --------- EXIT ---------")
     
 # MAIN
-atexit.register(logexit)
+atexit.register(logexit) 
 
 t0 = time.time() - lights_off_delay - 1
 logging.info(" --------- Startup ---------")
