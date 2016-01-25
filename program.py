@@ -42,7 +42,7 @@ def turnLightsOff():
     #toggleLightOnOff(2, False)
     hue.toggleGroupOnOff(group, False)
     return False
-
+ 
 def logexit():
     logging.info(" --------- EXIT ---------")
     
