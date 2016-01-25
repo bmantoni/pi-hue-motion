@@ -20,7 +20,7 @@ class Effects(object):
     actions = {
         'bedtime': LightAction(
             lambda p: p >= 17 and p < 22,
-            lambda g, self: self.setOneLightInGroup(g, 1, 962, 252, 151) ),
+            lambda g, self: self.setOneLightInGroup(g, 1, 962, 252, 100) ),
         'middleOfTheNight': LightAction(
             lambda p: p >= 22 or p < 6,
             lambda g, self: self.startScene(g, Effects.scenes['deep_sea']) ),

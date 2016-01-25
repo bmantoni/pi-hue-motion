@@ -29,7 +29,7 @@ hue = hue_control.HueControl(
     user="34f30a5a1bdaa117196a4dc63f76c33")
 
 # Assumes this has been created manually. With API.
-group = "nursery"
+group = "nursery2"
 
 def turnLightsOn():
     logging.info("Turning lights on!")
@@ -59,7 +59,7 @@ time.sleep(0.1)
 
 if not on_pi:
     # for testing
-    hue.setOneLightInGroup("nursery", 1, 962, 252, 151)
+    hue.setOneLightInGroup(group, 1, 962, 252, 151)
     time.sleep(1.0)
     hue.toggleGroupOnOff(group, False)
     exit(0)
